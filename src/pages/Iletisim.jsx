@@ -9,6 +9,7 @@ import {
     COMPANY_PHONE,
     COMPANY_EMAIL,
     COMPANY_ADDRESS,
+    GOOGLE_MAPS_URL,
     SERVICES,
 } from '../data/constants';
 
@@ -186,7 +187,11 @@ export default function Iletisim() {
                                     </div>
                                     <div>
                                         <h4>Telefon</h4>
-                                        <p>{COMPANY_PHONE}</p>
+                                        <p>
+                                            <a href={`tel:${COMPANY_PHONE.replace(/\s/g, '')}`} style={{ color: 'var(--color-primary)' }}>
+                                                {COMPANY_PHONE}
+                                            </a>
+                                        </p>
                                     </div>
                                 </div>
 
@@ -240,8 +245,16 @@ export default function Iletisim() {
                                 </div>
                             </div>
 
-                            <div className="map-container">
-                                <p>📍 Harita bilgisi için adres bilgilerinizi güncelleyin</p>
+                            <div className="map-container" style={{ textAlign: 'center', padding: '24px 0' }}>
+                                <a
+                                    href={GOOGLE_MAPS_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-outline"
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+                                >
+                                    <FiMapPin /> Google Haritalar'da Görüntüle
+                                </a>
                             </div>
                         </motion.div>
                     </div>

@@ -62,7 +62,16 @@ export default function Galeri() {
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <span style={{ fontSize: '4rem' }}>{item.emoji}</span>
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            display: 'block',
+                                        }}
+                                    />
                                     <div className="gallery-item-overlay">
                                         <div>
                                             <div className="gallery-item-title">{item.title}</div>

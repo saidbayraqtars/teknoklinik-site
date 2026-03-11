@@ -1,13 +1,13 @@
 import { FiMonitor, FiPrinter, FiCamera, FiShoppingCart, FiSettings, FiClock } from 'react-icons/fi';
 import { FaShieldAlt, FaHeadset, FaStar, FaTools, FaTruck, FaHandshake } from 'react-icons/fa';
 
-// WhatsApp number - REPLACE WITH REAL NUMBER BEFORE GOING LIVE
-export const WHATSAPP_NUMBER = '905XXXXXXXXX';
+export const WHATSAPP_NUMBER = '905453422944';
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 export const COMPANY_NAME = 'TEKNOKLİNİK';
 export const COMPANY_EMAIL = 'info@teknoklinik.com';
-export const COMPANY_PHONE = '+90 (5XX) XXX XX XX';
+export const COMPANY_PHONE = '0545 342 29 44';
 export const COMPANY_ADDRESS = 'İstanbul, Türkiye';
+export const GOOGLE_MAPS_URL = 'https://share.google/X0PsAYn3JXsDxePBe';
 
 export const NAV_LINKS = [
   { name: 'Ana Sayfa', path: '/' },
@@ -231,15 +231,12 @@ export const FAQ_DATA = [
 ];
 
 export const GALLERY_ITEMS = [
-  { id: 1, title: 'Bilgisayar Tamiri', category: 'bilgisayar', emoji: '🖥️' },
-  { id: 2, title: 'Yazıcı Bakımı', category: 'yazici', emoji: '🖨️' },
-  { id: 3, title: 'Kamera Montajı', category: 'kamera', emoji: '📷' },
-  { id: 4, title: 'Anakart Tamiri', category: 'bilgisayar', emoji: '🔧' },
-  { id: 5, title: 'Ağ Yazıcı Kurulumu', category: 'yazici', emoji: '🔌' },
-  { id: 6, title: 'Güvenlik Sistemi', category: 'kamera', emoji: '🛡️' },
-  { id: 7, title: 'Laptop Ekran Değişimi', category: 'bilgisayar', emoji: '💻' },
-  { id: 8, title: 'Toner Dolumu', category: 'yazici', emoji: '🎨' },
-  { id: 9, title: 'IP Kamera Kurulumu', category: 'kamera', emoji: '📹' },
+  { id: 1, title: 'Anakart Tamiri', category: 'bilgisayar', image: '/anakart-tamiri.png', desc: 'Profesyonel anakart onarımı' },
+  { id: 2, title: 'BGA Tamiri', category: 'bilgisayar', image: '/bga-tamiri.png', desc: 'BGA rework ve chip yenileme' },
+  { id: 3, title: 'Laptop Ekran Değişimi', category: 'bilgisayar', image: '/laptop-ekran.png', desc: 'LCD/LED ekran değişimi' },
+  { id: 4, title: 'Yazıcı Tamiri', category: 'yazici', image: '/yazici-tamiri.png', desc: 'Lazer ve inkjet yazıcı tamiri' },
+  { id: 5, title: 'Veri Kurtarma', category: 'bilgisayar', image: '/veri-kurtarma.png', desc: 'HDD/SSD veri kurtarma' },
+  { id: 6, title: 'Kamera Montajı', category: 'kamera', image: '/kamera-montaj.png', desc: 'IP güvenlik kamerası kurulumu' },
 ];
 
 export const GALLERY_FILTERS = [
