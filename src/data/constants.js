@@ -1,4 +1,4 @@
-import { FiMonitor, FiPrinter, FiCamera, FiShoppingCart, FiSettings, FiClock } from 'react-icons/fi';
+import { FiMonitor, FiPrinter, FiCamera, FiShoppingCart, FiSettings, FiClock, FiGlobe } from 'react-icons/fi';
 import { FaShieldAlt, FaHeadset, FaStar, FaTools, FaTruck, FaHandshake } from 'react-icons/fa';
 
 export const WHATSAPP_NUMBER = '905453422944';
@@ -106,6 +106,21 @@ export const SERVICES = [
       'Toner/kartuş dahil',
       'Teknik destek dahil',
       'Esnek ödeme seçenekleri',
+    ],
+  },
+  {
+    id: 'web-tasarim',
+    icon: FiGlobe,
+    title: 'Web Tasarım',
+    shortDesc: 'Profesyonel ve modern web sitesi tasarım ve geliştirme hizmetleri.',
+    description: 'İşletmeniz için kurumsal web sitesi, e-ticaret sitesi ve özel yazılım çözümleri geliştiriyoruz. SEO uyumlu, mobil dostu ve modern tasarımlarla dijital dünyada fark yaratmanızı sağlıyoruz.',
+    features: [
+      'Kurumsal web sitesi tasarımı',
+      'E-ticaret sitesi geliştirme',
+      'Mobil uyumlu (responsive) tasarım',
+      'SEO optimizasyonu',
+      'Alan adı ve hosting hizmeti',
+      'Web sitesi bakım ve güncelleme',
     ],
   },
 ];
@@ -244,6 +259,7 @@ export const GALLERY_FILTERS = [
   { key: 'bilgisayar', label: 'Bilgisayar' },
   { key: 'yazici', label: 'Yazıcı' },
   { key: 'kamera', label: 'Kamera' },
+  { key: 'web', label: 'Web Tasarım' },
 ];
 
 export const TIMELINE = [
