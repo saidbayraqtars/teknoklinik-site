@@ -1,262 +1,122 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiPhone, FiMail, FiMapPin, FiClock, FiSend } from 'react-icons/fi';
-import { FaWhatsapp } from 'react-icons/fa';
+import Icon from '../components/Icon';
+import PageHeader from '../components/PageHeader';
 import {
-    WHATSAPP_NUMBER,
-    WHATSAPP_URL,
-    COMPANY_PHONE,
-    COMPANY_EMAIL,
-    COMPANY_ADDRESS,
-    GOOGLE_MAPS_URL,
-    SERVICES,
-} from '../data/constants';
-
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
-    }),
-};
+    WHATSAPP_URL, COMPANY_PHONE, COMPANY_PHONE_E164, ADDRESS_TEXT, HOURS_TEXT, SUPPORT_TEXT,
+    GOOGLE_MAPS_URL, SERVICES, whatsappLink,
+} from '../data/site';
 
 export default function Iletisim() {
-    const [form, setForm] = useState({
-        name: '',
-        phone: '',
-        service: '',
-        message: '',
-    });
+    const [form, setForm] = useState({ name: '', phone: '', service: '', message: '' });
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-    const handleSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-
-        const text = `Merhaba, TEKNOKLİNİK web sitesinden yazıyorum.
-
-*Ad Soyad:* ${form.name}
-*Telefon:* ${form.phone}
-*Hizmet:* ${form.service || 'Belirtilmedi'}
-*Mesaj:* ${form.message}`;
-
-        const encoded = encodeURIComponent(text);
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+        const text = [
+            'Merhaba, Tecnoklinik web sitesinden yazıyorum.',
+            '',
+            `*Ad Soyad:* ${form.name.trim()}`,
+            `*Telefon:* ${form.phone.trim()}`,
+            `*Hizmet:* ${form.service || 'Belirtilmedi'}`,
+            `*Mesaj:* ${form.message.trim()}`,
+        ].join('\n');
+        window.open(whatsappLink(text), '_blank', 'noopener');
     };
 
     return (
         <>
-            <section className="page-header">
-                <div className="container">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1>İletişim</h1>
-                        <p>Size nasıl yardımcı olabiliriz?</p>
-                        <div className="breadcrumb">
-                            <Link to="/">Ana Sayfa</Link>
-                            <span>/</span>
-                            <span className="current">İletişim</span>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
+            <PageHeader title="İletişim" lead="Size nasıl yardımcı olabiliriz?" crumbs={[['İletişim']]} />
 
             <section className="section">
                 <div className="container">
                     <div className="contact-grid">
-                        <motion.div
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeInUp}
-                        >
-                            <div className="contact-form">
-                                <h3
-                                    style={{
-                                        color: 'var(--color-white)',
-                                        fontSize: '1.3rem',
-                                        marginBottom: 8,
-                                    }}
-                                >
-                                    Bize Yazın
-                                </h3>
-                                <p
-                                    style={{
-                                        color: 'var(--color-text-muted)',
-                                        fontSize: '0.9rem',
-                                        marginBottom: 28,
-                                    }}
-                                >
-                                    Formu doldurun, mesajınız WhatsApp üzerinden bize iletilsin.
+                        <div className="contact-form">
+                            <h2 className="contact-form-title">Bize Yazın</h2>
+                            <p className="contact-form-lead">
+                                Formu doldurun, mesajınız WhatsApp'ta hazır olarak açılsın; göndermek size kalır.
+                            </p>
+
+                            <form onSubmit={onSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="name">Ad Soyad *</label>
+                                    <input type="text" id="name" name="name" autoComplete="name" placeholder="Adınız ve soyadınız"
+                                        value={form.name} onChange={onChange} required />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="phone">Telefon *</label>
+                                    <input type="tel" id="phone" name="phone" autoComplete="tel" inputMode="tel"
+                                        placeholder="05XX XXX XX XX" pattern="[0-9 +()\-]{10,20}"
+                                        title="Telefon numaranızı yazın (ör. 0545 342 29 44)"
+                                        value={form.phone} onChange={onChange} required />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="service">Hizmet</label>
+                                    <select id="service" name="service" value={form.service} onChange={onChange}>
+                                        <option value="">Bir hizmet seçin</option>
+                                        {SERVICES.map((s) => (
+                                            <option key={s.slug} value={s.title}>{s.title}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="message">Mesajınız *</label>
+                                    <textarea id="message" name="message" placeholder="Arızayı ya da ihtiyacınızı kısaca yazın"
+                                        value={form.message} onChange={onChange} required></textarea>
+                                </div>
+                                <button type="submit" className="btn btn-primary btn-block">
+                                    <Icon name="send" /> WhatsApp ile Gönder
+                                </button>
+                                <p className="form-note">
+                                    Bilgileriniz sitede saklanmaz. Ayrıntı: <Link to="/gizlilik">Gizlilik ve KVKK</Link>
                                 </p>
+                            </form>
+                        </div>
 
-                                <form onSubmit={handleSubmit}>
-                                    <div className="form-group">
-                                        <label htmlFor="name">Ad Soyad *</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            placeholder="Adınız ve soyadınız"
-                                            value={form.name}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="phone">Telefon *</label>
-                                        <input
-                                            type="tel"
-                                            id="phone"
-                                            name="phone"
-                                            placeholder="05XX XXX XX XX"
-                                            value={form.phone}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="service">Hizmet Seçimi</label>
-                                        <select
-                                            id="service"
-                                            name="service"
-                                            value={form.service}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">Bir hizmet seçin</option>
-                                            {SERVICES.map((s) => (
-                                                <option key={s.id} value={s.title}>
-                                                    {s.title}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="message">Mesajınız *</label>
-                                        <textarea
-                                            id="message"
-                                            name="message"
-                                            placeholder="Sorununuzu veya ihtiyacınızı detaylı açıklayın..."
-                                            value={form.message}
-                                            onChange={handleChange}
-                                            required
-                                        ></textarea>
-                                    </div>
-                                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                                        <FiSend /> WhatsApp ile Gönder
-                                    </button>
-                                </form>
-
-                                <div style={{ textAlign: 'center', marginTop: 20 }}>
-                                    <p
-                                        style={{
-                                            color: 'var(--color-text-dim)',
-                                            fontSize: '0.8rem',
-                                            marginBottom: 12,
-                                        }}
-                                    >
-                                        veya doğrudan WhatsApp'tan yazın
-                                    </p>
-                                    <a
-                                        href={WHATSAPP_URL}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn btn-whatsapp"
-                                        style={{ width: '100%' }}
-                                    >
-                                        <FaWhatsapp /> WhatsApp'ı Aç
-                                    </a>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            variants={fadeInUp}
-                            custom={1}
-                        >
-                            <div className="contact-info-cards">
+                        <div>
+                            <address className="contact-info-cards">
                                 <div className="contact-info-card">
-                                    <div className="contact-info-icon">
-                                        <FiPhone />
-                                    </div>
+                                    <div className="contact-info-icon"><Icon name="call" /></div>
                                     <div>
-                                        <h4>Telefon</h4>
+                                        <h2>Telefon</h2>
+                                        <p><a href={`tel:${COMPANY_PHONE_E164}`} className="accent-text">{COMPANY_PHONE}</a></p>
+                                    </div>
+                                </div>
+                                <div className="contact-info-card">
+                                    <div className="contact-info-icon"><Icon name="chat-round-call" /></div>
+                                    <div>
+                                        <h2>WhatsApp</h2>
                                         <p>
-                                            <a href={`tel:${COMPANY_PHONE.replace(/\s/g, '')}`} style={{ color: 'var(--color-primary)' }}>
-                                                {COMPANY_PHONE}
+                                            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="wa-text">
+                                                Hemen yazın →
                                             </a>
                                         </p>
                                     </div>
                                 </div>
-
                                 <div className="contact-info-card">
-                                    <div className="contact-info-icon">
-                                        <FaWhatsapp />
-                                    </div>
+                                    <div className="contact-info-icon"><Icon name="map-point" /></div>
                                     <div>
-                                        <h4>WhatsApp</h4>
-                                        <p>
-                                            <a
-                                                href={WHATSAPP_URL}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{ color: '#25D366' }}
-                                            >
-                                                Hemen Yazın →
-                                            </a>
-                                        </p>
+                                        <h2>Adres</h2>
+                                        <p>{ADDRESS_TEXT}</p>
                                     </div>
                                 </div>
-
                                 <div className="contact-info-card">
-                                    <div className="contact-info-icon">
-                                        <FiMail />
-                                    </div>
+                                    <div className="contact-info-icon"><Icon name="clock" /></div>
                                     <div>
-                                        <h4>E-posta</h4>
-                                        <p>{COMPANY_EMAIL}</p>
+                                        <h2>Çalışma Saatleri</h2>
+                                        <p>{HOURS_TEXT}</p>
+                                        <p>{SUPPORT_TEXT}</p>
                                     </div>
                                 </div>
+                            </address>
 
-                                <div className="contact-info-card">
-                                    <div className="contact-info-icon">
-                                        <FiMapPin />
-                                    </div>
-                                    <div>
-                                        <h4>Adres</h4>
-                                        <p>{COMPANY_ADDRESS}</p>
-                                    </div>
-                                </div>
-
-                                <div className="contact-info-card">
-                                    <div className="contact-info-icon">
-                                        <FiClock />
-                                    </div>
-                                    <div>
-                                        <h4>Çalışma Saatleri</h4>
-                                        <p>Pazartesi - Cumartesi: 09:00 - 19:00</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="map-container" style={{ textAlign: 'center', padding: '24px 0' }}>
-                                <a
-                                    href={GOOGLE_MAPS_URL}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn btn-outline"
-                                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
-                                >
-                                    <FiMapPin /> Google Haritalar'da Görüntüle
+                            <div className="map-actions">
+                                <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                                    <Icon name="map-point" /> Google Haritalar'da Aç
                                 </a>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>

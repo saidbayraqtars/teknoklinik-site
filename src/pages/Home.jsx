@@ -1,59 +1,45 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FaWhatsapp, FaStar } from 'react-icons/fa';
-import { FiArrowRight, FiCheck } from 'react-icons/fi';
+import Icon from '../components/Icon';
+import Reveal from '../components/Reveal';
+import CtaBox from '../components/CtaBox';
 import {
-    SERVICES,
-    STATS,
-    FEATURES,
-    TESTIMONIALS,
-    WHATSAPP_URL,
-} from '../data/constants';
+    SERVICES, STATS, FEATURES, WHATSAPP_URL, COMPANY_PHONE, COMPANY_PHONE_E164, ADDRESS_TEXT, HOURS_TEXT,
+    GOOGLE_MAPS_URL, SERVICE_AREA, TONER_SITE_URL,
+} from '../data/site';
 
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
-    }),
-};
-
-function AnimatedCounter({ target, suffix = '' }) {
-    const [count, setCount] = useState(0);
+// Sayı, görünür alana girince sayar. Ön-render ve JS'siz görünümde son değer yazılıdır.
+function Counter({ target, suffix = '' }) {
+    const [value, setValue] = useState(target);
     const ref = useRef(null);
-    const started = useRef(false);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !started.current) {
-                    started.current = true;
-                    let start = 0;
-                    const duration = 2000;
-                    const step = target / (duration / 16);
-                    const animate = () => {
-                        start += step;
-                        if (start >= target) {
-                            setCount(target);
-                        } else {
-                            setCount(Math.floor(start));
-                            requestAnimationFrame(animate);
-                        }
-                    };
-                    animate();
-                }
-            },
-            { threshold: 0.5 }
-        );
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
+        const el = ref.current;
+        if (!el || typeof IntersectionObserver === 'undefined') return;
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        let raf;
+        const io = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            io.disconnect();
+            const start = performance.now();
+            const tick = (t) => {
+                const p = Math.min(1, (t - start) / 1500);
+                setValue(Math.round(target * (1 - Math.pow(1 - p, 3))));
+                if (p < 1) raf = requestAnimationFrame(tick);
+            };
+            setValue(0);
+            raf = requestAnimationFrame(tick);
+        }, { threshold: 0.5 });
+        io.observe(el);
+        return () => {
+            io.disconnect();
+            cancelAnimationFrame(raf);
+        };
     }, [target]);
 
     return (
         <span ref={ref}>
-            {count.toLocaleString('tr-TR')}
+            {value.toLocaleString('tr-TR')}
             {suffix}
         </span>
     );
@@ -64,265 +50,151 @@ export default function Home() {
         <>
             {/* ===== HERO ===== */}
             <section className="hero">
-                <div className="hero-bg"></div>
+                <div className="hero-bg" aria-hidden="true"></div>
                 <div className="container">
                     <div className="hero-content">
-                        <motion.div
-                            className="hero-text"
-                            initial="hidden"
-                            animate="visible"
-                            variants={fadeInUp}
-                        >
+                        <div className="hero-text">
                             <div className="hero-badge">
                                 <span className="badge-dot"></span>
-                                TEKNOLOJİ ÇÖZÜM ORTAGINIZ
+                                SAMSUN · İLKADIM TEKNİK SERVİS
                             </div>
                             <h1 className="hero-title">
-                                Teknolojide <span className="highlight">Güvenilir</span>{' '}
-                                Çözüm Ortağınız
+                                Samsun'da <span className="highlight">Bilgisayar ve Yazıcı</span> Tamiri
                             </h1>
                             <p className="hero-description">
-                                Bilgisayar tamiri, yazıcı servisi, kamera montajı ve kurumsal
-                                çözümlerle işinizi bir adım öteye taşıyoruz. 10 yılı aşkın
-                                tecrübemizle yanınızdayız.
+                                Bilgisayar ve yazıcı tamiri, güvenlik kamerası montajı, bilgisayar alım satımı ve kurumsal
+                                çözümler. 10 yılı aşkın tecrübemizle İlkadım'daki mağazamızda ve yerinde servisle yanınızdayız.
                             </p>
                             <div className="hero-buttons">
-                                <Link to="/hizmetler" className="btn btn-primary">
-                                    Hizmetlerimiz <FiArrowRight />
-                                </Link>
-                                <a
-                                    href={WHATSAPP_URL}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn btn-whatsapp"
-                                >
-                                    <FaWhatsapp /> Hemen Ulaşın
+                                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
+                                    <Icon name="chat-round-call" /> WhatsApp'tan Yazın
+                                </a>
+                                <a href={`tel:${COMPANY_PHONE_E164}`} className="btn btn-primary">
+                                    <Icon name="call" /> {COMPANY_PHONE}
                                 </a>
                             </div>
                             <div className="hero-stats">
-                                {STATS.map((stat, i) => (
-                                    <div className="hero-stat" key={i}>
+                                {STATS.map((stat) => (
+                                    <div className="hero-stat" key={stat.label}>
                                         <div className="hero-stat-number">
-                                            <AnimatedCounter target={stat.number} suffix={stat.suffix} />
+                                            <Counter target={stat.number} suffix={stat.suffix} />
                                         </div>
                                         <div className="hero-stat-label">{stat.label}</div>
                                     </div>
                                 ))}
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div
-                            className="hero-visual"
-                            initial={{ opacity: 0, x: 40 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.7, delay: 0.3 }}
-                        >
-                            <div className="hero-card-stack">
-                                {SERVICES.slice(0, 4).map((service, i) => (
-                                    <motion.div
-                                        className="hero-feature-card"
-                                        key={service.id}
-                                        initial={{ opacity: 0, x: 30 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.4 + i * 0.15 }}
-                                    >
-                                        <div className="hero-feature-icon">
-                                            <service.icon />
-                                        </div>
-                                        <div>
-                                            <div className="hero-feature-title">{service.title}</div>
-                                            <div className="hero-feature-desc">{service.shortDesc.substring(0, 60)}...</div>
-                                        </div>
-                                    </motion.div>
+                        <div className="hero-visual">
+                            <ul className="hero-card-stack">
+                                {SERVICES.slice(0, 4).map((service) => (
+                                    <li key={service.slug}>
+                                        <Link to={`/hizmetler/${service.slug}`} className="hero-feature-card">
+                                            <div className="hero-feature-icon">
+                                                <Icon name={service.icon} />
+                                            </div>
+                                            <div>
+                                                <div className="hero-feature-title">{service.title}</div>
+                                                <div className="hero-feature-desc">{service.shortDesc}</div>
+                                            </div>
+                                        </Link>
+                                    </li>
                                 ))}
-                            </div>
-                        </motion.div>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* ===== SERVICES OVERVIEW ===== */}
+            {/* ===== HİZMETLER ===== */}
             <section className="section">
                 <div className="container">
-                    <motion.div
-                        className="section-header"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={fadeInUp}
-                    >
+                    <Reveal className="section-header">
                         <span className="section-subtitle">HİZMETLERİMİZ</span>
                         <h2 className="section-title">Neler Yapıyoruz?</h2>
                         <p className="section-description">
-                            Geniş hizmet yelpazemizle bireysel ve kurumsal tüm teknoloji
-                            ihtiyaçlarınıza profesyonel çözümler sunuyoruz.
+                            Bireysel ve kurumsal müşterilerimizin teknoloji ihtiyaçlarına tek adresten çözüm sunuyoruz.
                         </p>
-                    </motion.div>
+                    </Reveal>
 
                     <div className="services-grid">
                         {SERVICES.map((service, i) => (
-                            <motion.div
-                                className="service-card"
-                                key={service.id}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true, amount: 0.2 }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
+                            <Reveal className="service-card" key={service.slug} delay={(i % 3) * 80}>
                                 <div className="service-icon">
-                                    <service.icon />
+                                    <Icon name={service.icon} />
                                 </div>
                                 <h3>{service.title}</h3>
                                 <p>{service.shortDesc}</p>
-                                <Link to="/hizmetler" className="btn btn-outline" style={{ marginTop: 20 }}>
-                                    Detaylı Bilgi <FiArrowRight />
+                                <Link to={`/hizmetler/${service.slug}`} className="btn btn-outline service-more">
+                                    Ayrıntılar <span className="sr-only">: {service.title}</span> <Icon name="arrow-right" />
                                 </Link>
-                            </motion.div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* ===== WHY US ===== */}
+            {/* ===== NEDEN BİZ ===== */}
             <section className="section why-us">
                 <div className="container">
-                    <motion.div
-                        className="section-header"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={fadeInUp}
-                    >
+                    <Reveal className="section-header">
                         <span className="section-subtitle">NEDEN BİZ?</span>
-                        <h2 className="section-title">Farkımız Ne?</h2>
+                        <h2 className="section-title">Neden Tecnoklinik?</h2>
                         <p className="section-description">
-                            Müşteri memnuniyeti odaklı çalışma anlayışımız ve uzman kadromuzla
-                            sektörde öne çıkıyoruz.
+                            Müşteri memnuniyetini öne alan çalışma anlayışımız ve deneyimli ekibimizle hizmet veriyoruz.
                         </p>
-                    </motion.div>
-
-                    <div className="stats-grid">
-                        {STATS.map((stat, i) => (
-                            <motion.div
-                                className="stat-card"
-                                key={i}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
-                                <div className="stat-number">
-                                    <AnimatedCounter target={stat.number} suffix={stat.suffix} />
-                                </div>
-                                <div className="stat-label">{stat.label}</div>
-                            </motion.div>
-                        ))}
-                    </div>
+                    </Reveal>
 
                     <div className="features-grid">
                         {FEATURES.map((feat, i) => (
-                            <motion.div
-                                className="feature-card"
-                                key={i}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
+                            <Reveal className="feature-card" key={feat.title} delay={(i % 3) * 80}>
                                 <div className="feature-icon">
-                                    <feat.icon />
+                                    <Icon name={feat.icon} />
                                 </div>
                                 <div>
-                                    <h4>{feat.title}</h4>
+                                    <h3>{feat.title}</h3>
                                     <p>{feat.desc}</p>
                                 </div>
-                            </motion.div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* ===== TESTIMONIALS ===== */}
+            {/* ===== KONUM ===== */}
             <section className="section">
                 <div className="container">
-                    <motion.div
-                        className="section-header"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={fadeInUp}
-                    >
-                        <span className="section-subtitle">REFERANSLAR</span>
-                        <h2 className="section-title">Müşterilerimiz Ne Diyor?</h2>
-                        <p className="section-description">
-                            Binlerce mutlu müşterimizin bize olan güveni, en büyük referansımızdır.
-                        </p>
-                    </motion.div>
-
-                    <div className="testimonials-grid">
-                        {TESTIMONIALS.slice(0, 3).map((t, i) => (
-                            <motion.div
-                                className="testimonial-card"
-                                key={i}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
-                                <div className="testimonial-stars">
-                                    {Array.from({ length: t.stars }).map((_, j) => (
-                                        <FaStar key={j} />
-                                    ))}
-                                </div>
-                                <p className="testimonial-text">"{t.text}"</p>
-                                <div className="testimonial-author">
-                                    <div className="testimonial-avatar">{t.initials}</div>
-                                    <div>
-                                        <div className="testimonial-name">{t.name}</div>
-                                        <div className="testimonial-role">{t.role}</div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ===== CTA ===== */}
-            <section className="cta-section">
-                <div className="container">
-                    <motion.div
-                        className="cta-box"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={fadeInUp}
-                    >
-                        <h2>Hemen Bizimle İletişime Geçin</h2>
-                        <p>
-                            Teknoloji sorunlarınız için profesyonel destek almak ister misiniz?
-                            WhatsApp üzerinden anında ulaşabilirsiniz.
-                        </p>
-                        <div className="cta-buttons">
-                            <a
-                                href={WHATSAPP_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn btn-whatsapp"
-                            >
-                                <FaWhatsapp /> WhatsApp ile Ulaşın
-                            </a>
-                            <Link to="/iletisim" className="btn btn-outline">
-                                İletişim Formu <FiArrowRight />
-                            </Link>
+                    <Reveal className="location-box">
+                        <div>
+                            <span className="section-subtitle">BİZİ ZİYARET EDİN</span>
+                            <h2 className="section-title">İlkadım'daki Mağazamız</h2>
+                            <p className="location-text">
+                                <Icon name="map-point" className="inline-icon" /> {ADDRESS_TEXT}
+                            </p>
+                            <p className="location-text">
+                                <Icon name="clock" className="inline-icon" /> {HOURS_TEXT}
+                            </p>
+                            <p className="location-text">
+                                Yerinde servis bölgelerimiz: {SERVICE_AREA.join(', ')}.
+                            </p>
+                            <p className="location-text">
+                                Toner ve kartuş dolumu için:{' '}
+                                <a href={TONER_SITE_URL} target="_blank" rel="noopener">samsuntonerdolum.com.tr</a>
+                            </p>
                         </div>
-                    </motion.div>
+                        <div className="location-actions">
+                            <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                                <Icon name="map-point" /> Yol Tarifi Al
+                            </a>
+                            <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                                <Icon name="star2" /> Google Yorumlarımız
+                            </a>
+                        </div>
+                    </Reveal>
                 </div>
             </section>
+
+            <CtaBox />
         </>
     );
 }

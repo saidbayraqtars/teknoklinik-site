@@ -1,147 +1,84 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { FiMonitor } from 'react-icons/fi';
-import { VALUES, TIMELINE, STATS } from '../data/constants';
-
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
-    }),
-};
+import Icon from '../components/Icon';
+import Reveal from '../components/Reveal';
+import PageHeader from '../components/PageHeader';
+import CtaBox from '../components/CtaBox';
+import { VALUES, TIMELINE } from '../data/site';
 
 export default function Hakkimizda() {
     return (
         <>
-            <section className="page-header">
-                <div className="container">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1>Hakkımızda</h1>
-                        <p>TEKNOKLİNİK'i yakından tanıyın</p>
-                        <div className="breadcrumb">
-                            <Link to="/">Ana Sayfa</Link>
-                            <span>/</span>
-                            <span className="current">Hakkımızda</span>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
+            <PageHeader title="Hakkımızda" lead="Tecnoklinik'i yakından tanıyın" crumbs={[['Hakkımızda']]} />
 
-            {/* About Intro */}
             <section className="section">
                 <div className="container">
                     <div className="about-intro">
-                        <motion.div
-                            className="about-image"
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <FiMonitor style={{ fontSize: '6rem', opacity: 0.6 }} />
-                        </motion.div>
-                        <motion.div
-                            className="about-text"
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
+                        <Reveal className="about-image">
+                            <img
+                                src="/img/bga-tamiri.webp"
+                                alt="Tecnoklinik atölyesinde BGA çip onarımı"
+                                width="640"
+                                height="640"
+                                loading="lazy"
+                            />
+                        </Reveal>
+                        <Reveal className="about-text">
                             <h2>
-                                Teknolojide Güvenilir{' '}
-                                <span style={{ color: 'var(--color-primary)' }}>Çözüm Ortağınız</span>
+                                Samsun'da Güvenilir <span className="accent-text">Teknik Servis</span>
                             </h2>
                             <p>
-                                TEKNOKLİNİK, 2014 yılından bu yana bilgi teknolojileri alanında
-                                hizmet vermektedir. Bilgisayar tamiri ile başlayan yolculuğumuz,
-                                bugün yazıcı servisi, kamera montajı, bilgisayar alım-satımı,
-                                kurumsal yazıcı çözümleri ve yazıcı kiralama hizmetlerini
-                                kapsayan geniş bir yelpazede devam etmektedir.
+                                Tecnoklinik, 2014 yılından bu yana Samsun'da bilgi teknolojileri alanında hizmet veriyor.
+                                Bilgisayar tamiriyle başlayan yolculuğumuz bugün yazıcı servisi, güvenlik kamerası montajı,
+                                bilgisayar alım satımı, kurumsal yazıcı çözümleri, yazıcı kiralama ve web tasarımı kapsıyor.
                             </p>
                             <p>
-                                Misyonumuz, bireysel ve kurumsal müşterilerimizin teknoloji
-                                ihtiyaçlarını en hızlı, güvenilir ve uygun fiyatlı şekilde
-                                karşılamaktır. Alanında uzman teknik kadromuz ve müşteri
-                                memnuniyeti odaklı yaklaşımımızla sektörde fark yaratıyoruz.
+                                Amacımız bireysel ve kurumsal müşterilerimizin teknoloji ihtiyaçlarını hızlı, güvenilir ve
+                                uygun fiyatlı şekilde karşılamak. İlkadım'daki mağazamızda ve Samsun merkez ilçelerinde yerinde
+                                servisle hizmet veriyoruz.
                             </p>
-                            <p>
-                                Vizyonumuz ise Türkiye'nin her noktasında erişilebilir teknik
-                                servis ve teknoloji çözümleri sunan lider bir marka olmaktır.
-                            </p>
-                        </motion.div>
+                        </Reveal>
                     </div>
                 </div>
             </section>
 
-            {/* Values */}
-            <section className="section" style={{ background: 'var(--gradient-dark)' }}>
+            <section className="section section-dark">
                 <div className="container">
-                    <motion.div
-                        className="section-header"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={fadeInUp}
-                    >
+                    <Reveal className="section-header">
                         <span className="section-subtitle">DEĞERLERİMİZ</span>
                         <h2 className="section-title">Temel Değerlerimiz</h2>
-                    </motion.div>
+                    </Reveal>
                     <div className="values-grid">
                         {VALUES.map((value, i) => (
-                            <motion.div
-                                className="value-card"
-                                key={i}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
+                            <Reveal className="value-card" key={value.title} delay={i * 80}>
                                 <div className="value-icon">
-                                    <value.icon />
+                                    <Icon name={value.icon} />
                                 </div>
-                                <h4>{value.title}</h4>
+                                <h3>{value.title}</h3>
                                 <p>{value.desc}</p>
-                            </motion.div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Timeline */}
             <section className="section">
                 <div className="container">
-                    <motion.div
-                        className="section-header"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={fadeInUp}
-                    >
+                    <Reveal className="section-header">
                         <span className="section-subtitle">YOLCULUĞUMUZ</span>
                         <h2 className="section-title">Kilometre Taşları</h2>
-                    </motion.div>
-                    <div className="timeline">
-                        {TIMELINE.map((item, i) => (
-                            <motion.div
-                                className="timeline-item"
-                                key={i}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                custom={i}
-                                variants={fadeInUp}
-                            >
+                    </Reveal>
+                    <ol className="timeline">
+                        {TIMELINE.map((item) => (
+                            <Reveal as="li" className="timeline-item" key={item.year}>
                                 <div className="timeline-year">{item.year}</div>
-                                <div className="timeline-title">{item.title}</div>
-                                <div className="timeline-desc">{item.desc}</div>
-                            </motion.div>
+                                <h3 className="timeline-title">{item.title}</h3>
+                                <p className="timeline-desc">{item.desc}</p>
+                            </Reveal>
                         ))}
-                    </div>
+                    </ol>
                 </div>
             </section>
+
+            <CtaBox />
         </>
     );
 }

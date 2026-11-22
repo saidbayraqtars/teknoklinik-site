@@ -1,0 +1,23 @@
+# Tecnoklinik
+
+> Samsun İlkadım'da teknik servis: bilgisayar tamiri, yazıcı tamiri ve bakımı, güvenlik kamerası montajı,
+> bilgisayar alım satımı, kurumsal yazıcı çözümleri, yazıcı kiralama ve web tasarım.
+
+- Adres: 19 Mayıs Mahallesi, Dr. Kamil Caddesi No:16/D, İlkadım / Samsun 55030
+- Telefon ve WhatsApp: 0545 342 29 44 (+90 545 342 29 44)
+- Çalışma saatleri: Pazartesi – Cumartesi 09:00 – 19:00
+- Yerinde servis: İlkadım, Atakum, Canik, Tekkeköy
+- Toner ve kartuş dolumu: https://samsuntonerdolum.com.tr
+
+## Sayfalar
+
+- [Hizmetler](https://tecnoklinik.com/hizmetler)
+- [Bilgisayar Tamiri](https://tecnoklinik.com/hizmetler/bilgisayar-tamiri)
+- [Yazıcı Tamiri](https://tecnoklinik.com/hizmetler/yazici-tamiri)
+- [Güvenlik Kamerası Montajı](https://tecnoklinik.com/hizmetler/guvenlik-kamerasi-montaji)
+- [Bilgisayar Alım Satımı](https://tecnoklinik.com/hizmetler/bilgisayar-alim-satim)
+- [Kurumsal Yazıcı Çözümleri](https://tecnoklinik.com/hizmetler/kurumsal-yazici-cozumleri)
+- [Yazıcı Kiralama](https://tecnoklinik.com/hizmetler/yazici-kiralama)
+- [Web Tasarım](https://tecnoklinik.com/hizmetler/web-tasarim)
+- [Sıkça Sorulan Sorular](https://tecnoklinik.com/sss)
+- [İletişim](https://tecnoklinik.com/iletisim)

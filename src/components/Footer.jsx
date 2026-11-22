@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
-import { FiMonitor, FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
-import { FaInstagram, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
-import { COMPANY_NAME, COMPANY_PHONE, COMPANY_EMAIL, COMPANY_ADDRESS, NAV_LINKS, SERVICES } from '../data/constants';
+import Icon from './Icon';
+import { Logo } from './Navbar';
+import {
+    COMPANY_NAME, COMPANY_PHONE, COMPANY_PHONE_E164, ADDRESS_TEXT, HOURS_TEXT, SUPPORT_TEXT,
+    NAV_LINKS, SERVICES, SOCIAL, GOOGLE_MAPS_URL, TONER_SITE_URL,
+} from '../data/site';
 
 export default function Footer() {
     return (
@@ -9,59 +12,56 @@ export default function Footer() {
             <div className="container">
                 <div className="footer-grid">
                     <div className="footer-brand">
-                        <h3>
-                            TEKNO<span className="accent">KLİNİK</span>
-                        </h3>
+                        <Link to="/" className="navbar-logo footer-logo"><Logo /></Link>
                         <p>
-                            Bilgisayar tamiri, yazıcı tamiri, kamera montajı ve daha fazlası için
-                            güvenilir teknoloji çözüm ortağınız. 10 yılı aşkın tecrübemizle
-                            hizmetinizdeyiz.
+                            Samsun İlkadım'da bilgisayar ve yazıcı tamiri, güvenlik kamerası montajı, bilgisayar
+                            alım satımı ve web tasarım hizmetleri.
                         </p>
                         <div className="footer-social">
-                            <a href="#" aria-label="Instagram"><FaInstagram /></a>
-                            <a href="#" aria-label="Facebook"><FaFacebookF /></a>
-                            <a href="#" aria-label="Twitter"><FaTwitter /></a>
-                            <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
+                            {SOCIAL.map((s) => (
+                                <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name}>
+                                    {s.icon ? <Icon name={s.icon} /> : <span className="social-text">{s.name[0]}</span>}
+                                </a>
+                            ))}
                         </div>
                     </div>
 
                     <div className="footer-column">
-                        <h4>Sayfalar</h4>
+                        <h2 className="footer-title">Sayfalar</h2>
                         {NAV_LINKS.map((link) => (
                             <Link key={link.path} to={link.path}>{link.name}</Link>
                         ))}
-                        <Link to="/iletisim">İletişim</Link>
+                        <a href={TONER_SITE_URL} target="_blank" rel="noopener">Samsun Toner Dolum</a>
                     </div>
 
                     <div className="footer-column">
-                        <h4>Hizmetler</h4>
-                        {SERVICES.slice(0, 5).map((s) => (
-                            <Link key={s.id} to="/hizmetler">{s.title}</Link>
+                        <h2 className="footer-title">Hizmetler</h2>
+                        {SERVICES.map((s) => (
+                            <Link key={s.slug} to={`/hizmetler/${s.slug}`}>{s.title}</Link>
                         ))}
                     </div>
 
                     <div className="footer-column">
-                        <h4>İletişim</h4>
-                        <a href={`tel:${COMPANY_PHONE}`}>
-                            <FiPhone style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                            {COMPANY_PHONE}
+                        <h2 className="footer-title">İletişim</h2>
+                        <a href={`tel:${COMPANY_PHONE_E164}`}>
+                            <Icon name="call" className="inline-icon" /> {COMPANY_PHONE}
                         </a>
-                        <a href={`mailto:${COMPANY_EMAIL}`}>
-                            <FiMail style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                            {COMPANY_EMAIL}
+                        <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer">
+                            <Icon name="map-point" className="inline-icon" /> {ADDRESS_TEXT}
                         </a>
-                        <a href="#">
-                            <FiMapPin style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                            {COMPANY_ADDRESS}
-                        </a>
+                        <span className="footer-text">
+                            <Icon name="clock" className="inline-icon" /> {HOURS_TEXT}
+                        </span>
+                        <span className="footer-text">
+                            <Icon name="headset" className="inline-icon" /> {SUPPORT_TEXT}
+                        </span>
                     </div>
                 </div>
 
                 <div className="footer-bottom">
-                    <p>© {new Date().getFullYear()} {COMPANY_NAME}. Tüm hakları saklıdır.</p>
+                    <p suppressHydrationWarning>© {new Date().getFullYear()} {COMPANY_NAME}. Tüm hakları saklıdır.</p>
                     <div className="footer-bottom-links">
-                        <a href="#">Gizlilik Politikası</a>
-                        <a href="#">Kullanım Koşulları</a>
+                        <Link to="/gizlilik">Gizlilik ve KVKK</Link>
                     </div>
                 </div>
             </div>

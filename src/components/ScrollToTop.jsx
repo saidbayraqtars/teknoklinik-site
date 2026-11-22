@@ -1,26 +1,24 @@
 import { useState, useEffect } from 'react';
-import { FiArrowUp } from 'react-icons/fi';
+import Icon from './Icon';
 
 export default function ScrollToTop() {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => setVisible(window.scrollY > 400);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const onScroll = () => setVisible(window.scrollY > 400);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
     }, []);
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
 
     return (
         <button
+            type="button"
             className={`scroll-to-top ${visible ? 'visible' : ''}`}
-            onClick={scrollToTop}
-            aria-label="Yukarı git"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            aria-label="Sayfanın başına dön"
+            tabIndex={visible ? 0 : -1}
         >
-            <FiArrowUp />
+            <Icon name="arrow-up" />
         </button>
     );
 }

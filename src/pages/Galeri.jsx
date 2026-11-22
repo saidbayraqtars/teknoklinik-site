@@ -1,91 +1,51 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { GALLERY_ITEMS, GALLERY_FILTERS } from '../data/constants';
-
-const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i = 0) => ({
-        opacity: 1,
-        y: 0,
-        transition: { delay: i * 0.05, duration: 0.4, ease: 'easeOut' },
-    }),
-};
+import PageHeader from '../components/PageHeader';
+import CtaBox from '../components/CtaBox';
+import { GALLERY_ITEMS, GALLERY_FILTERS } from '../data/site';
 
 export default function Galeri() {
-    const [activeFilter, setActiveFilter] = useState('hepsi');
-
-    const filtered =
-        activeFilter === 'hepsi'
-            ? GALLERY_ITEMS
-            : GALLERY_ITEMS.filter((item) => item.category === activeFilter);
+    const [active, setActive] = useState('hepsi');
+    const filtered = active === 'hepsi' ? GALLERY_ITEMS : GALLERY_ITEMS.filter((i) => i.category === active);
 
     return (
         <>
-            <section className="page-header">
-                <div className="container">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                        <h1>Galeri</h1>
-                        <p>Gerçekleştirdiğimiz işlerden örnekler</p>
-                        <div className="breadcrumb">
-                            <Link to="/">Ana Sayfa</Link>
-                            <span>/</span>
-                            <span className="current">Galeri</span>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
+            <PageHeader title="Galeri" lead="Yaptığımız işlerden örnekler" crumbs={[['Galeri']]} />
 
             <section className="section">
                 <div className="container">
-                    <div className="gallery-filters">
-                        {GALLERY_FILTERS.map((filter) => (
+                    <div className="gallery-filters" role="group" aria-label="Kategori süzgeci">
+                        {GALLERY_FILTERS.map((f) => (
                             <button
-                                key={filter.key}
-                                className={`gallery-filter-btn ${activeFilter === filter.key ? 'active' : ''}`}
-                                onClick={() => setActiveFilter(filter.key)}
+                                type="button"
+                                key={f.key}
+                                className={`gallery-filter-btn ${active === f.key ? 'active' : ''}`}
+                                aria-pressed={active === f.key}
+                                onClick={() => setActive(f.key)}
                             >
-                                {filter.label}
+                                {f.label}
                             </button>
                         ))}
                     </div>
 
-                    <motion.div className="gallery-grid" layout>
-                        <AnimatePresence mode="popLayout">
-                            {filtered.map((item, i) => (
-                                <motion.div
-                                    className="gallery-item"
-                                    key={item.id}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                            display: 'block',
-                                        }}
-                                    />
-                                    <div className="gallery-item-overlay">
-                                        <div>
-                                            <div className="gallery-item-title">{item.title}</div>
-                                            <div className="gallery-item-category">
-                                                {GALLERY_FILTERS.find((f) => f.key === item.category)?.label}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
+                    <ul className="gallery-grid">
+                        {filtered.map((item) => (
+                            <li className="gallery-item" key={item.id}>
+                                <figure>
+                                    <img src={item.image} alt={item.alt} width="640" height="640" loading="lazy" decoding="async" />
+                                    <figcaption className="gallery-item-overlay">
+                                        <span className="gallery-item-title">{item.title}</span>
+                                        <span className="gallery-item-category">
+                                            {GALLERY_FILTERS.find((f) => f.key === item.category)?.label}
+                                        </span>
+                                    </figcaption>
+                                </figure>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </section>
+
+            <CtaBox />
         </>
     );
 }
